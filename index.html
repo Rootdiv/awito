@@ -23,6 +23,7 @@
     <meta name="msapplication-TileColor" content="#00aba9" />
     <meta name="theme-color" content="#ffffff" />
     <link rel="stylesheet" href="./css/style.css" />
+    <script defer src="./js/main.js"></script>
     <title>Avito Glo Academy</title>
   </head>
   <body>
@@ -43,7 +44,7 @@
               <li class="menu__link"><a href="#" data-category="tech">Техника</a></li>
             </ul>
           </nav>
-          <button class="btn add__ad">Подать объявление</button>
+          <button type="button" class="btn add__ad">Подать объявление</button>
         </div>
         <div class="search">
           <form class="search__form">
@@ -54,7 +55,6 @@
         </div>
       </div>
     </header>
-
     <main>
       <div class="container">
         <ul class="catalog">
@@ -165,11 +165,11 @@
             </label>
             <div class="modal__btn-block">
               <span class="modal__btn-warning">Заполните все поля</span>
-              <button class="btn modal__btn-submit">Отправить</button>
+              <button type="submit" class="btn modal__btn-submit">Отправить</button>
             </div>
           </form>
         </div>
-        <button class="modal__close">&#10008;</button>
+        <button type="button" class="modal__close">&#10008;</button>
       </div>
     </div>
     <div class="modal modal__item hide">
@@ -184,11 +184,11 @@
               <span class="modal__description-item">Далеко-далеко за словесными горами в стране гласных и согласных
                 живут рыбные тексты. Своего страна составитель ведущими путь?</span>
             </p>
-            <p>Цена: <span class="modal__cost-item">4000 ₽</span></p>
-            <button class="btn">Купить</button>
+            <p>Цена: <span class="modal__cost-item">4000 &#8381;</span></p>
+            <button type="button" class="btn">Купить</button>
           </div>
         </div>
-        <button class="modal__close">&#10008;</button>
+        <button type="button" class="modal__close">&#10008;</button>
       </div>
     </div>
   </body>
