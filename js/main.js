@@ -68,6 +68,67 @@ const renderCard = () => {
   catalog.append(...cardList);
 };
 
+const renderCardItem = ({ id, imageType, image, nameItem, status, descriptionItem, costItem }) => {
+  const modalBlock = document.createElement('div');
+  modalBlock.className = 'modal__block';
+  const modalHeader = document.createElement('h2');
+  modalHeader.className = 'modal__header';
+  modalHeader.textContent = 'Купить';
+  const modalContent = document.createElement('div');
+  modalContent.className = 'modal__content';
+
+  const divImage = document.createElement('div');
+  const img = new Image();
+  img.className = 'modal__image modal__image-item';
+  img.src = `data:${imageType};base64,${image}`;
+  img.alt = nameItem;
+  divImage.append(img);
+
+  const modalDescription = document.createElement('div');
+  modalDescription.className = 'modal__description';
+  const title = document.createElement('h3');
+  title.className = 'modal__header-item';
+  title.textContent = nameItem;
+
+  const statusWrapElem = document.createElement('p');
+  statusWrapElem.textContent = 'Состояние: ';
+  const statusElem = document.createElement('span');
+  statusElem.className = 'modal__status-item';
+  statusElem.textContent = status === 'new' ? 'отличное' : 'б/у';
+  statusWrapElem.append(statusElem);
+
+  const descriptionElem = document.createElement('p');
+  descriptionElem.textContent = 'Описание: ';
+  const description = document.createElement('span');
+  description.className = 'modal__description-item';
+  description.textContent = descriptionItem;
+  descriptionElem.append(description);
+
+  const priceElem = document.createElement('p');
+  priceElem.textContent = 'Цена: ';
+  const price = document.createElement('span');
+  price.className = 'modal__cost-item';
+  price.innerHTML = `${costItem} &#8381;`;
+  priceElem.append(price);
+
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'btn';
+  button.textContent = 'Купить';
+  button.dataset.id = id;
+
+  const modalClose = document.createElement('button');
+  modalClose.type = 'button';
+  modalClose.className = 'modal__close';
+  modalClose.innerHTML = '&#10008;';
+
+  modalDescription.append(divImage, title, statusWrapElem, descriptionElem, priceElem, button);
+  modalContent.append(divImage, modalDescription, modalClose);
+  modalBlock.append(modalHeader, modalContent);
+
+  return modalBlock;
+};
+
 modalFileInput.addEventListener('change', ({ target }) => {
   const reader = new FileReader();
   const file = target.files[0];
@@ -115,6 +176,10 @@ btnAdd.addEventListener('click', () => {
 
 catalog.addEventListener('click', ({ target }) => {
   if (target.closest('.card')) {
+    modalItem.textContent = '';
+    const id = target.closest('.card').dataset.id;
+    const cardData = dataBase.find(item => Number(id) === item.id);
+    modalItem.append(renderCardItem(cardData));
     modalItem.classList.remove('hide');
     document.addEventListener('keyup', closeModal);
   }
