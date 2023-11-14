@@ -13,6 +13,8 @@ const modalBtnWarning = document.querySelector('.modal__btn-warning');
 const modalFileInput = document.querySelector('.modal__file-input');
 const modalFileBtn = document.querySelector('.modal__file-btn');
 const modalImageAdd = document.querySelector('.modal__image-add');
+const searchInput = document.querySelector('.search__input');
+const menuContainer = document.querySelector('.menu__container');
 
 const textFileBtn = modalFileBtn.textContent;
 const srcImageAdd = modalImageAdd.src;
@@ -41,9 +43,9 @@ const checkFrom = () => {
   modalBtnWarning.style.display = validForm ? 'none' : '';
 };
 
-const renderCard = () => {
+const renderCard = (DB = dataBase) => {
   catalog.textContent = '';
-  const cardList = dataBase.map(({ id, imageType, image, nameItem, costItem }) => {
+  const cardList = DB.map(({ id, imageType, image, nameItem, costItem }) => {
     const card = document.createElement('li');
     card.className = 'card';
     card.dataset.id = id;
@@ -94,7 +96,7 @@ const renderCardItem = ({ id, imageType, image, nameItem, status, descriptionIte
   statusWrapElem.textContent = 'Состояние: ';
   const statusElem = document.createElement('span');
   statusElem.className = 'modal__status-item';
-  statusElem.textContent = status === 'new' ? 'отличное' : 'б/у';
+  statusElem.textContent = status === 'new' ? 'Новый' : 'Б/У';
   statusWrapElem.append(statusElem);
 
   const descriptionElem = document.createElement('p');
@@ -129,6 +131,17 @@ const renderCardItem = ({ id, imageType, image, nameItem, status, descriptionIte
   return modalBlock;
 };
 
+searchInput.addEventListener('input', () => {
+  const valueSearch = searchInput.value.trim().toLowerCase();
+  if (valueSearch.length > 2) {
+    const result = dataBase.filter(
+      ({ nameItem, descriptionItem }) =>
+        nameItem.toLowerCase().includes(valueSearch) || descriptionItem.toLowerCase().includes(valueSearch),
+    );
+    renderCard(result);
+  }
+});
+
 modalFileInput.addEventListener('change', ({ target }) => {
   const reader = new FileReader();
   const file = target.files[0];
@@ -159,7 +172,7 @@ modalSubmit.addEventListener('submit', event => {
   for (const elem of elementsModalSubmit) {
     itemObj[elem.name] = elem.value;
   }
-  itemObj.id = Date.now();
+  itemObj.id = Date.now().toString(16);
   itemObj.image = infoPhoto.base64;
   itemObj.imageType = infoPhoto.type;
   dataBase.push(itemObj);
@@ -175,13 +188,23 @@ btnAdd.addEventListener('click', () => {
 });
 
 catalog.addEventListener('click', ({ target }) => {
-  if (target.closest('.card')) {
+  const card = target.closest('.card');
+  if (card) {
     modalItem.textContent = '';
-    const id = target.closest('.card').dataset.id;
-    const cardData = dataBase.find(item => Number(id) === item.id);
+    const id = card.dataset.id;
+    const cardData = dataBase.find(item => id === item.id);
     modalItem.append(renderCardItem(cardData));
     modalItem.classList.remove('hide');
     document.addEventListener('keyup', closeModal);
+  }
+});
+
+menuContainer.addEventListener('click', event => {
+  event.preventDefault();
+  const target = event.target;
+  if (target.tagName === 'A') {
+    const result = dataBase.filter(item => item.category === target.dataset.category);
+    renderCard(result);
   }
 });
 
